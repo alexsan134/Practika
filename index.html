@@ -24,6 +24,13 @@
 <a  class="socialS" style="color:#3b5998;font-size:1.6em" href="https://www.facebook.com/practikaGT/"><span class="icon-facebook2"></span></a>
 <a  class="socialS googleS" style="color:#c71610;font-size:1.6em" href="mailto:practikacomunicacion@gmail.com"><span class="icon-google"></span></a>
 </div>
+<div class="modal fade contactMsg" tabindex="-1" role="dialog" aria-labelledby="sendMsg" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <h2>Mensaje Enviado</h2>
+    </div>
+  </div>
+</div>
 <nav class="navbar navbar-expand-lg navbar-light" id="navSec">
 
   <a class="navbar-brand" href="./"></a>
@@ -364,7 +371,7 @@
 </div>
 <section class="container col-xl-11 msgE">
   <div id="mailTo">
-    <form action="practikaEmail.php" method="POST">
+    <form  method="POST">
           <img src="img/mails.png" alt="">
       <input type="text" id="nameE" name="nameE" placeholder="Nombre">
       </br>
@@ -372,11 +379,11 @@
       </br>
       <input type="text" id="phoneE" name="phoneE" placeholder="Numero de telefono">
       </br>
-      <h1 id="msjE">Mensaje </h1>
-       <textarea rows="5" placeholder="Escribenos aqui tu sugerencia, comentario, o si quieres ayuda.">
+      <h1 id="msjE">Mensaje</h1>
+       <textarea rows="5" id="msgEs" placeholder="Escribenos aqui tu sugerencia, comentario, o si quieres ayuda.">
 </textarea> 
       </br>
-      <input  class="btn btn-success" type="submit" value="Enviar mensaje">
+      <a href="#send" class="btn btn-success btnSend">Enviar mensaje</a>
     </form>
   </div>
   <div id="map2">
@@ -943,6 +950,9 @@ top:-10%;
 #mailTo input:focus{
   box-shadow:0px 0px 15px rgba(0,0,0,.7);
 }
+.nptFocus{
+  box-shadow:0px 0px 15px red;
+}
 #mailTo textarea:focus{
   box-shadow:0px 0px 15px rgba(0,0,0,.7); 
 }
@@ -965,10 +975,25 @@ top:-10%;
 }
 .msgE form .btn {
   background:#80C356;
+  font-size:1.3em;
+  font-weight:bold;
+  margin-top:2%;
 }
+
 .msgE form .btn:hover{
   cursor:pointer;
 }
+.contactMsg > div > div{
+  padding:3%;
+    text-align:center;
+      background:#80C356;
+      color:#fff;
+  
+}
+.contactMsg > div > div > h2{
+      font-weight:bold;
+}
+
 @media screen and (max-width:1200px){
   #tabs .nav-tabs{
 width:53%;
@@ -1197,6 +1222,80 @@ var more = false;
 var w = $(window).width();
 var hImg;
 var wImg;
+var nombre = $("#nameE").val();
+var email = $("#mailE").val();
+var telefono = $("#phoneE").val();
+var mensaje = $("#msgEs").val();
+var e;
+
+function setVal(){
+nombre = $("#nameE").val();
+email = $("#mailE").val();
+telefono = $("#phoneE").val();
+mensaje = $("#msgEs").val();
+}
+function verifyVal(){
+  if(e == true){
+  if(nombre == ""){
+    $("#nameE").addClass("nptFocus");
+  }else{
+    $("#nameE").removeClass("nptFocus");
+  }
+  if(email == ""){
+     $("#mailE").addClass("nptFocus");
+  }else{
+    $("#mailE").removeClass("nptFocus");
+  }
+ 
+  if(telefono == ""){
+  $("#phoneE").addClass("nptFocus");
+  }else{
+    $("#phoneE").removeClass("nptFocus");
+  }
+ if(mensaje ==   ""){
+  $("#msgEs").addClass("nptFocus");       
+  }else{
+    $("#msgEs").removeClass("nptFocus");
+  }
+  }
+}
+
+$("#mailTo input").click(function(){
+  setVal();
+  verifyVal();
+})
+$("#mailTo textarea").click(function(){
+  setVal();
+  verifyVal();
+})
+
+$(".btnSend").click(function() {
+  setVal();
+  e = true;
+  verifyVal();
+  if(nombre != "" && email != "" && telefono != "" && mensaje != ""){
+    var datos = 'nombre='+ nombre + '&email=' + email + '&telefono=' + telefono + '&mensaje=' + mensaje;
+    $.ajax({
+    type: "POST",
+    url: "contact.php",
+    data: datos,
+    success: function() {
+      $(".contactMsg > div > div").css({
+          "background" : '#80C356'
+        });
+        $(".contactMsg > div > div > h2").text("Mensaje Enviado");
+         $('.contactMsg').modal('show');
+    },
+    error: function() {
+        $(".contactMsg > div > div").css({
+          "background" : '#f44336'
+        });
+        $(".contactMsg > div > div > h2").text("Error de envio");
+          $('.contactMsg').modal('show');             
+    }
+});
+  }
+});
 
 $(window).scroll(function(){
 s = $(window).scrollTop();
