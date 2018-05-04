@@ -97,17 +97,15 @@ nav div ul{
 
 nav > #subnav{
   position:absolute;
-  top:0%;
   width:40%;
   padding-right:0.7%;
-  left:0;
   padding-left:4rem;
-  margin-top:-15%;
   background:#fff;
 }
 nav > #subnav > a > img{
   width:70%;
   position: relative;
+  margin-top:-3.2%;
   z-index:101;
 }
 .subnavUl{
